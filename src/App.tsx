@@ -12,7 +12,8 @@ const client = generateClient<Schema>();
 
 function App() {
   const { messages, deleteMessage } = useMessages();
-  const { userSegments, setUserSegments } = useUserSegments();
+  const { userSegments, setUserSegments, deleteUserSegment } =
+    useUserSegments();
   const [showForm, setShowForm] = useState<boolean>(false);
 
   const createMessage = (formData: MessageFormData) => {
@@ -25,7 +26,6 @@ function App() {
       ...segment,
     });
     setUserSegments((prevSegments) => [...prevSegments, segment]);
-    console.log(userSegments);
   };
   return (
     <Authenticator>
@@ -41,6 +41,7 @@ function App() {
             deleteMessage={deleteMessage}
             userSegments={userSegments}
             onCreateSegment={onCreateSegment}
+            deleteUserSegment={deleteUserSegment}
           />
           <button onClick={signOut}>Sign out</button>
         </main>

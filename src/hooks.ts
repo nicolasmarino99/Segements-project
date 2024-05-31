@@ -37,5 +37,9 @@ export const useUserSegments = () => {
     };
   }, []);
 
-  return { userSegments, setUserSegments };
+  const deleteUserSegment = (id: string | undefined) => {
+    if (id === undefined) return
+    client.models.UserSegment.delete({ id });
+  };
+  return { userSegments, setUserSegments, deleteUserSegment };
 };
