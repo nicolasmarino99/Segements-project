@@ -1,39 +1,51 @@
-import { useEffect, useState } from "react";
+import "@aws-amplify/ui-react/styles.css";
+import { useState } from "react";
 import type { Schema } from "../amplify/data/resource";
+import { Authenticator } from "@aws-amplify/ui-react";
 import { generateClient } from "aws-amplify/data";
+import MessageForm from "./MessageForm";
+import { MessageFormData, Segment } from "./types";
+import Messages from "./Messages";
+import { useMessages, useUserSegments } from "./hooks";
 
 const client = generateClient<Schema>();
 
 function App() {
-  const [todos, setTodos] = useState<Array<Schema["Todo"]["type"]>>([]);
+  const { messages, deleteMessage } = useMessages();
+  const { userSegments, setUserSegments } = useUserSegments();
+  const [showForm, setShowForm] = useState<boolean>(false);
 
-  useEffect(() => {
-    client.models.Todo.observeQuery().subscribe({
-      next: (data) => setTodos([...data.items]),
+  const createMessage = (formData: MessageFormData) => {
+    client.models.Message.create({ ...formData });
+    setShowForm(false);
+  };
+  const onCreateSegment = (messageID: string) => (segment: Segment) => {
+    segment.messageID = messageID;
+    client.models.UserSegment.create({
+      ...segment,
     });
-  }, []);
-
-  function createTodo() {
-    client.models.Todo.create({ content: window.prompt("Todo content") });
-  }
-
+    setUserSegments((prevSegments) => [...prevSegments, segment]);
+    console.log(userSegments);
+  };
   return (
-    <main>
-      <h1>My todos</h1>
-      <button onClick={createTodo}>+ new</button>
-      <ul>
-        {todos.map((todo) => (
-          <li key={todo.id}>{todo.content}</li>
-        ))}
-      </ul>
-      <div>
-        🥳 App successfully hosted. Try creating a new todo.
-        <br />
-        <a href="https://docs.amplify.aws/react/start/quickstart/#make-frontend-updates">
-          Review next step of this tutorial.
-        </a>
-      </div>
-    </main>
+    <Authenticator>
+      {({ signOut, user }) => (
+        <main>
+          <h1>Welcome {user?.signInDetails?.loginId?.split("@")[0]}!</h1>
+          <button onClick={() => setShowForm((prev) => !prev)}>
+            + New Message
+          </button>
+          {showForm && <MessageForm onSubmit={createMessage} />}
+          <Messages
+            messages={messages}
+            deleteMessage={deleteMessage}
+            userSegments={userSegments}
+            onCreateSegment={onCreateSegment}
+          />
+          <button onClick={signOut}>Sign out</button>
+        </main>
+      )}
+    </Authenticator>
   );
 }
 
