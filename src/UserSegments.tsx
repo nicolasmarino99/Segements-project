@@ -15,7 +15,7 @@ const SegmentComponent: React.FC<SegmentComponentProps> = ({
   segment,
   deleteUserSegment,
 }) => {
-  const [users, setUsers] = useState<string[]>(["Joe", "John", "James"]);
+  const users: string[] = ["Joe", "John", "James"];
   const [assignedUsers, setAssignedUsers] = useState<string[]>([]);
 
   return (
