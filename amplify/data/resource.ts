@@ -15,7 +15,7 @@ const schema = a.schema({
         name: a.string(),
         description: a.string(),
       })
-    .authorization(allow => [allow.owner()]),
+    .authorization(allow => [allow.authenticated()]),
     Message: a
     .model({
       messageID: a.id(),
@@ -23,7 +23,7 @@ const schema = a.schema({
       content: a.string(),
       segments: a.hasMany('UserSegment', 'messageID'),
     })
-    .authorization(allow => [allow.owner()]),
+    .authorization(allow => [allow.authenticated()]),
 });
 
 export type Schema = ClientSchema<typeof schema>;

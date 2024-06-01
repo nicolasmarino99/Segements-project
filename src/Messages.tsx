@@ -24,7 +24,7 @@ const Messages: React.FC<MessagesProps> = ({
         <button onClick={() => deleteMessage(message.id)}>X</button>
         <h2>{message.title}</h2>
         <p>Description: {message.content}</p>
-        <p>Author: {message.createdAt}</p>
+        <p>createAt: {message.createdAt}</p>
         <UserSegments
           userSegments={userSegments.filter(
             (segment) => segment.messageID === message.id

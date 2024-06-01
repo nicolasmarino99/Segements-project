@@ -28,25 +28,27 @@ function App() {
     setUserSegments((prevSegments) => [...prevSegments, segment]);
   };
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <main>
-          <h1>Welcome {user?.signInDetails?.loginId?.split("@")[0]}!</h1>
-          <button onClick={() => setShowForm((prev) => !prev)}>
-            + New Message
-          </button>
-          {showForm && <MessageForm onSubmit={createMessage} />}
-          <Messages
-            messages={messages}
-            deleteMessage={deleteMessage}
-            userSegments={userSegments}
-            onCreateSegment={onCreateSegment}
-            deleteUserSegment={deleteUserSegment}
-          />
-          <button onClick={signOut}>Sign out</button>
-        </main>
-      )}
-    </Authenticator>
+    <>
+      <Authenticator>
+        {({ signOut, user }) => (
+          <main>
+            <h1>Welcome {user?.signInDetails?.loginId?.split("@")[0]}!</h1>
+            <button onClick={() => setShowForm((prev) => !prev)}>
+              + New Message
+            </button>
+            {showForm && <MessageForm onSubmit={createMessage} />}
+            <Messages
+              messages={messages}
+              deleteMessage={deleteMessage}
+              userSegments={userSegments}
+              onCreateSegment={onCreateSegment}
+              deleteUserSegment={deleteUserSegment}
+            />
+            <button onClick={signOut}>Sign out</button>
+          </main>
+        )}
+      </Authenticator>
+    </>
   );
 }
 
